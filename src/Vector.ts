@@ -23,6 +23,42 @@ export default class Vector {
             this.setMagnitude(max);
         }
     }
+    static add(...vectors: Vector[]): Vector {
+        let x = 0;
+        let y = 0;
+        for (const vector of vectors) {
+            x += vector.x;
+            y += vector.y;
+        }
+        return new Vector(x, y);
+    }
+    static subtract(...vectors: Vector[]): Vector {
+        let x = 0;
+        let y = 0;
+        for (const vector of vectors) {
+            x -= vector.x;
+            y -= vector.y;
+        }
+        return new Vector(x, y);
+    }
+    static multiply(...vectors: Vector[]): Vector {
+        let x = 0;
+        let y = 0;
+        for (const vector of vectors) {
+            x *= vector.x;
+            y *= vector.y;
+        }
+        return new Vector(x, y);
+    }
+    static divide(...vectors: Vector[]): Vector {
+        let x = 0;
+        let y = 0;
+        for (const vector of vectors) {
+            x /= vector.x;
+            y /= vector.y;
+        }
+        return new Vector(x, y);
+    }
     add(quantity: Vector | number) {
         if (quantity instanceof Vector) {
             this.x += quantity.x;
