@@ -23,39 +23,59 @@ export default class Vector {
             this.setMagnitude(max);
         }
     }
-    static add(...vectors: Vector[]): Vector {
+    static add(...vectors: (Vector|number)[]): Vector {
         let x = 0;
         let y = 0;
         for (const vector of vectors) {
-            x += vector.x;
-            y += vector.y;
+            if (vector instanceof Vector) {
+                x += vector.x;
+                y += vector.y;
+            } else {
+                x += vector;
+                y += vector;
+            }
         }
         return new Vector(x, y);
     }
-    static subtract(...vectors: Vector[]): Vector {
+    static subtract(...vectors: (Vector|number)[]): Vector {
         let x = 0;
         let y = 0;
         for (const vector of vectors) {
-            x -= vector.x;
-            y -= vector.y;
+            if (vector instanceof Vector) {
+                x -= vector.x;
+                y -= vector.y;
+            } else {
+                x -= vector;
+                y -= vector;
+            }
         }
         return new Vector(x, y);
     }
-    static multiply(...vectors: Vector[]): Vector {
+    static multiply(...quantities: (Vector|number)[]): Vector {
         let x = 0;
         let y = 0;
-        for (const vector of vectors) {
-            x *= vector.x;
-            y *= vector.y;
+        for (const quantity of quantities) {
+            if (quantity instanceof Vector) {
+                x *= quantity.x;
+                y *= quantity.y;
+            } else {
+                x *= quantity;
+                y *= quantity;
+            }
         }
         return new Vector(x, y);
     }
-    static divide(...vectors: Vector[]): Vector {
+    static divide(...vectors: (Vector|number)[]): Vector {
         let x = 0;
         let y = 0;
         for (const vector of vectors) {
-            x /= vector.x;
-            y /= vector.y;
+            if (vector instanceof Vector) {
+                x /= vector.x;
+                y /= vector.y;
+            } else {
+                x /= vector;
+                y /= vector;
+            }
         }
         return new Vector(x, y);
     }
