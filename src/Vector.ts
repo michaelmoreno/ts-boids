@@ -1,3 +1,5 @@
+type Quantities = [Vector|number, Vector|number, ...(Vector|number)[]]
+
 export default class Vector {
     x: number;
     y: number;
@@ -12,7 +14,7 @@ export default class Vector {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
     get magnitude(): number {
-        return this.calcMagnitude();
+        return this._magnitude;
     }
     setMagnitude(magnitude: number) {
         const ratio = magnitude / this.magnitude;
@@ -23,59 +25,42 @@ export default class Vector {
             this.setMagnitude(max);
         }
     }
-    static add(...vectors: (Vector|number)[]): Vector {
-        let x = 0;
-        let y = 0;
-        for (const vector of vectors) {
-            if (vector instanceof Vector) {
-                x += vector.x;
-                y += vector.y;
-            } else {
-                x += vector;
-                y += vector;
-            }
+    normalize() {
+        this.setMagnitude(1);
+    }
+    static add(...quantities: Quantities): Vector {
+        const [first, ...rest] = quantities;
+        let [x, y] = first instanceof Vector ? [first.x, first.y] : [first, first];
+        for (const quantity of rest) {
+            x += quantity instanceof Vector ? quantity.x : quantity;
+            y += quantity instanceof Vector ? quantity.y : quantity;
         }
         return new Vector(x, y);
     }
-    static subtract(...vectors: (Vector|number)[]): Vector {
-        let x = 0;
-        let y = 0;
-        for (const vector of vectors) {
-            if (vector instanceof Vector) {
-                x -= vector.x;
-                y -= vector.y;
-            } else {
-                x -= vector;
-                y -= vector;
-            }
+    static subtract(...quantities: Quantities): Vector {
+        const [first, ...rest] = quantities;
+        let [x, y] = first instanceof Vector ? [first.x, first.y] : [first, first];
+        for (const quantity of rest) {
+            x -= quantity instanceof Vector ? quantity.x : quantity;
+            y -= quantity instanceof Vector ? quantity.y : quantity;
         }
         return new Vector(x, y);
     }
-    static multiply(...quantities: (Vector|number)[]): Vector {
-        let x = 0;
-        let y = 0;
-        for (const quantity of quantities) {
-            if (quantity instanceof Vector) {
-                x *= quantity.x;
-                y *= quantity.y;
-            } else {
-                x *= quantity;
-                y *= quantity;
-            }
+    static multiply(...quantities: Quantities): Vector {
+        const [first, ...rest] = quantities;
+        let [x, y] = first instanceof Vector ? [first.x, first.y] : [first, first];
+        for (const quantity of rest) {
+            x *= quantity instanceof Vector ? quantity.x : quantity;
+            y *= quantity instanceof Vector ? quantity.y : quantity;
         }
         return new Vector(x, y);
     }
-    static divide(...vectors: (Vector|number)[]): Vector {
-        let x = 0;
-        let y = 0;
-        for (const vector of vectors) {
-            if (vector instanceof Vector) {
-                x /= vector.x;
-                y /= vector.y;
-            } else {
-                x /= vector;
-                y /= vector;
-            }
+    static divide(...vectors: Quantities): Vector {
+        const [first, ...rest] = vectors;
+        let [x, y] = first instanceof Vector ? [first.x, first.y] : [first, first];
+        for (const quantity of rest) {
+            x /= quantity instanceof Vector ? quantity.x : quantity;
+            y /= quantity instanceof Vector ? quantity.y : quantity;
         }
         return new Vector(x, y);
     }
