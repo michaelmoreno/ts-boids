@@ -6,7 +6,7 @@ export default class Vector {
     protected _magnitude: number;
     
     constructor(x: number, y: number) {
-        this.x = x;
+        this.x = x; 
         this.y = y;
         this._magnitude = this.calcMagnitude();
     }
@@ -99,5 +99,8 @@ export default class Vector {
             this.x /= quantity;
             this.y /= quantity;
         }
+    }
+    copy(): Vector {
+        return new Vector(this.x, this.y);
     }
 }
