@@ -100,6 +100,9 @@ export default class Vector {
             this.y /= quantity;
         }
     }
+    getAngle() {
+        return Math.atan2(this.y, this.x);
+    }
     copy(): Vector {
         return new Vector(this.x, this.y);
     }
