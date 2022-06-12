@@ -32,12 +32,6 @@ export default abstract class Graphics {
         context.fill();
     }
     drawTriangle(context: CanvasRenderingContext2D, a: Vector, b: Vector, c: Vector, color: string, thickness?: number) {
-        // console.log(b);
-        
-        // get distance from a to b
-        // let dist = Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
-        // console.log(dist);
-        
         context.beginPath();
         context.strokeStyle = color;
         context.setLineDash([]);

@@ -10,7 +10,7 @@ export default class BoidGraphics extends Graphics {
         this.boid = boid;
     }
     renderBoid(context: CanvasRenderingContext2D) {
-        this.fillCircle(context, this.boid.position.x, this.boid.position.y, this.boid.radius, this.boid.color);
+        this.fillCircle(context, this.boid.position.x, this.boid.position.y, 10, this.boid.color);
     }
     renderVelocity(context: CanvasRenderingContext2D, multipliedBy: number = 1) {
         const a = this.boid.position
@@ -23,7 +23,7 @@ export default class BoidGraphics extends Graphics {
         const { distance, circleRadius, angle, displacement } = this.boid.options.wander;
 
         const projectedPoint = this.boid.velocity.copy();
-        projectedPoint.setMagnitude(distance);
+        projectedPoint.magnitude = distance;
         projectedPoint.add(this.boid.position);
 
         this.fillCircle(context, projectedPoint.x, projectedPoint.y, 3, "blue");
@@ -35,5 +35,13 @@ export default class BoidGraphics extends Graphics {
         const target = new Vector(x, y);
 
         this.fillCircle(context, target.x, target.y, 3, "red");
+    }
+    renderVision(context: CanvasRenderingContext2D) {
+        this.strokeCircle(context, this.boid.position.x, this.boid.position.y, this.boid.radius, "blue");
+    }
+    renderNeighbors(context: CanvasRenderingContext2D) {
+        this.boid.neighbors.forEach(neighbor => {
+            this.drawLine(context, this.boid.position.x, this.boid.position.y, neighbor.position.x, neighbor.position.y, "red", 1);
+        });
     }
 }

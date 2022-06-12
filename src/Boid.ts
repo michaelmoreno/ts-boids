@@ -26,7 +26,7 @@ export default class Boid {
 
     constructor(x: number, y: number, maxSpeed: number, maxForce: number, radius: number, color: string, options: any) {
         this.position = new Vector(x, y);
-        this.velocity = new Vector(1, 1);
+        this.velocity = new Vector(randomInt(-10, 10), randomInt(-10, 10));
         this.acceleration = new Vector(0, 0);
         this.maxSpeed = maxSpeed;
         this.maxForce = maxForce;
@@ -53,13 +53,13 @@ export default class Boid {
         desired.limitMagnitude(this.maxSpeed);
         const steer = Vector.subtract(desired, this.velocity);
         steer.limitMagnitude(this.maxForce);
-        this.applyForce(desired);
+        this.applyForce(steer);
     }
     wander() {
         const { distance, circleRadius, angle, displacement } = this.options.wander;
 
         const projectedPoint = this.velocity.copy();
-        projectedPoint.setMagnitude(distance);
+        projectedPoint.magnitude = distance;
         projectedPoint.add(this.position);
         
         const theta = angle + this.velocity.getAngle();
@@ -68,13 +68,55 @@ export default class Boid {
         const target = new Vector(x, y);
 
         this.options.wander.angle += randomFloat(-displacement, displacement);
-        
         this.seek(target);
+    }
+    addNeighbors(boids: Boid[]) {
+        for (const boid of boids) {
+            const notSelf = boid !== this;
+            const inRange = Vector.distance(this.position, boid.position) < this.radius;
+            const notAlreadyAdded = !this.neighbors.includes(boid);
+            if (notSelf && inRange && notAlreadyAdded) {
+                this.neighbors.push(boid);
+            }
+        }
+    }
+    pruneNeighbors() {
+        this.neighbors = this.neighbors.filter(boid => {
+            const inRange = Vector.distance(this.position, boid.position) < this.radius;
+            return inRange;
+        })
+    }
+    updateNeighbors(boids: Boid[]) {
+        this.pruneNeighbors();
+        this.addNeighbors(boids);
+    }
+    keepInBounds(width: number, height: number) {
+        if (this.position.x < 0 - width / 2) {
+            this.position.x = 0 + width / 2;
+        }
+        if (this.position.x > width/2) {
+            this.position.x = 0 - width / 2;
+        }
+        if (this.position.y < 0 - height / 2) {
+            this.position.y = 0 + height / 2;
+        }
+        if (this.position.y > height/2) {
+            this.position.y = 0 - height / 2;
+        }
+    }
+    align() {
+        if (this.neighbors.length === 0) {
+            return;
+        }
+        const averageVelocity = Vector.average(this.neighbors.map(boid => boid.velocity));
+        this.applyForce(averageVelocity);
     }
     render(context: CanvasRenderingContext2D) {
         this.graphics.renderBoid(context);
         this.graphics.renderVelocity(context, 10);
         this.graphics.renderWander(context);
+        this.graphics.renderVision(context);
+        this.graphics.renderNeighbors(context);
     }
 }
         
