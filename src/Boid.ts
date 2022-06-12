@@ -109,14 +109,41 @@ export default class Boid {
             return;
         }
         const averageVelocity = Vector.average(this.neighbors.map(boid => boid.velocity));
+        averageVelocity.limitMagnitude(this.maxForce);
         this.applyForce(averageVelocity);
+    }
+    cohesion() {
+        if (this.neighbors.length === 0) {
+            return;
+        }
+        const averagePosition = Vector.average(this.neighbors.map(boid => boid.position));
+        this.seek(averagePosition);
+    }
+    separation() {
+        if (this.neighbors.length === 0) {
+            return;
+        }
+        const tooClose = 180;
+        const desired = new Vector(0, 0);
+        for (const boid of this.neighbors) {
+            const distance = Vector.distance(this.position, boid.position);
+            if (distance > tooClose) {
+                continue;
+            }
+            const difference = Vector.subtract(this.position, boid.position);
+            difference.normalize();
+            difference.multiply(1 / distance);
+            desired.add(difference);
+        }
+
+        this.applyForce(desired);
     }
     render(context: CanvasRenderingContext2D) {
         this.graphics.renderBoid(context);
         this.graphics.renderVelocity(context, 10);
-        this.graphics.renderWander(context);
-        this.graphics.renderVision(context);
-        this.graphics.renderNeighbors(context);
+        // this.graphics.renderWander(context);
+        // this.graphics.renderVision(context);
+        // this.graphics.rendeerNeighbors(context);
     }
 }
         

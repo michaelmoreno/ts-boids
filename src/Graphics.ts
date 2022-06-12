@@ -42,7 +42,7 @@ export default abstract class Graphics {
         context.lineWidth = thickness || 1;
         context.lineTo(c.x, c.y);
         context.strokeStyle = color;
-        context.stroke();
         context.closePath();
+        context.stroke();
     }
 }

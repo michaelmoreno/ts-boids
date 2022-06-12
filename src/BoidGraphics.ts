@@ -10,7 +10,8 @@ export default class BoidGraphics extends Graphics {
         this.boid = boid;
     }
     renderBoid(context: CanvasRenderingContext2D) {
-        this.fillCircle(context, this.boid.position.x, this.boid.position.y, 10, this.boid.color);
+        // this.fillCircle(context, this.boid.position.x, this.boid.position.y, 10, this.boid.color);
+        // this.
     }
     renderVelocity(context: CanvasRenderingContext2D, multipliedBy: number = 1) {
         const a = this.boid.position
@@ -41,7 +42,7 @@ export default class BoidGraphics extends Graphics {
     }
     renderNeighbors(context: CanvasRenderingContext2D) {
         this.boid.neighbors.forEach(neighbor => {
-            this.drawLine(context, this.boid.position.x, this.boid.position.y, neighbor.position.x, neighbor.position.y, "red", 1);
+            this.drawLine(context, this.boid.position.x, this.boid.position.y, neighbor.position.x, neighbor.position.y, "grey", 1);
         });
     }
 }

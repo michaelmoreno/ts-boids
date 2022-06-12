@@ -1,3 +1,5 @@
+import Vector from './Vector';
+
 interface Renderable {
     render(context: CanvasRenderingContext2D): void;
 }
@@ -52,8 +54,14 @@ export default class Renderer {
     eraseCanvas() {
         this.context.clearRect(0-this.width/2, 0-this.height/2, this.width, this.height);
     }
+    fillBackground(color: string) {
+        this.context.fillStyle = color;
+        this.context.fillRect(0-this.width/2, 0-this.height/2, this.width, this.height);
+    }
     render() {
         this.eraseCanvas();
+        this.fillBackground('black');
+        
         for (const entity of this.entities) {
             entity.render(this.context);
         }

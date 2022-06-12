@@ -31,6 +31,8 @@ export default class Simulation {
             boid.updateNeighbors(this.boids);
             boid.keepInBounds(this.renderer.width, this.renderer.height);
             boid.align();
+            boid.cohesion();
+            boid.separation();
         }
         for (const boid of this.boids) {
             boid.update();
@@ -53,10 +55,10 @@ export default class Simulation {
                     distance: 120,
                     circleRadius: 15,
                     angle: 0,
-                    displacement: 0.1,
+                    displacement: 0.5,
                 }
             }
-            const boid = new Boid(x, y, 3, 1, 200, color, options);
+            const boid = new Boid(x, y, 3, 0.1, 200, color, options);
             this.addBoid(boid);
         }
     }
