@@ -30,9 +30,11 @@ export default class Simulation {
         for (const boid of this.boids) {
             boid.updateNeighbors(this.boids);
             boid.keepInBounds(this.renderer.width, this.renderer.height);
-            boid.align();
-            boid.cohesion();
-            boid.separation();
+            // boid.alignment();
+            // boid.cohesion();
+            // boid.separation();
+            boid.flock();
+            boid.applyForce(boid.wander().multiply(0.5));
         }
         for (const boid of this.boids) {
             boid.update();
@@ -58,7 +60,7 @@ export default class Simulation {
                     displacement: 0.5,
                 }
             }
-            const boid = new Boid(x, y, 3, 0.1, 200, color, options);
+            const boid = new Boid(x, y, 3, .7, 200, color, options);
             this.addBoid(boid);
         }
     }

@@ -48,14 +48,15 @@ export default class Boid {
     friction() {
         this.applyForce(Vector.multiply(this.velocity, -0.02));
     }
-    seek(target: Vector) {
+    seek(target: Vector): Vector {
         const desired = Vector.subtract(target, this.position);
         desired.limitMagnitude(this.maxSpeed);
         const steer = Vector.subtract(desired, this.velocity);
         steer.limitMagnitude(this.maxForce);
-        this.applyForce(steer);
+        // this.applyForce(steer);
+        return steer;
     }
-    wander() {
+    wander(): Vector {
         const { distance, circleRadius, angle, displacement } = this.options.wander;
 
         const projectedPoint = this.velocity.copy();
@@ -68,7 +69,7 @@ export default class Boid {
         const target = new Vector(x, y);
 
         this.options.wander.angle += randomFloat(-displacement, displacement);
-        this.seek(target);
+        return this.seek(target);
     }
     addNeighbors(boids: Boid[]) {
         for (const boid of boids) {
@@ -104,26 +105,27 @@ export default class Boid {
             this.position.y = 0 - height / 2;
         }
     }
-    align() {
+    alignment(): Vector {
         if (this.neighbors.length === 0) {
-            return;
+            return new Vector(0, 0);
         }
         const averageVelocity = Vector.average(this.neighbors.map(boid => boid.velocity));
         averageVelocity.limitMagnitude(this.maxForce);
-        this.applyForce(averageVelocity);
+        // this.applyForce(averageVelocity);
+        return averageVelocity
     }
-    cohesion() {
+    cohesion(): Vector {
         if (this.neighbors.length === 0) {
-            return;
+            return new Vector(0, 0);
         }
         const averagePosition = Vector.average(this.neighbors.map(boid => boid.position));
-        this.seek(averagePosition);
+        return this.seek(averagePosition);
     }
-    separation() {
+    separation(): Vector {
         if (this.neighbors.length === 0) {
-            return;
+            return new Vector(0, 0);
         }
-        const tooClose = 180;
+        const tooClose = 200;
         const desired = new Vector(0, 0);
         for (const boid of this.neighbors) {
             const distance = Vector.distance(this.position, boid.position);
@@ -136,7 +138,16 @@ export default class Boid {
             desired.add(difference);
         }
 
-        this.applyForce(desired);
+        // this.applyForce(desired);
+        return desired;
+    }
+    flock() {
+        const alignment = this.alignment();
+        const cohesion = this.cohesion();
+        const separation = this.separation();
+        [alignment, cohesion, separation].forEach(force => {
+            this.applyForce(force);
+        })
     }
     render(context: CanvasRenderingContext2D) {
         this.graphics.renderBoid(context);
